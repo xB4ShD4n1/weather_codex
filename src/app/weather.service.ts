@@ -14,6 +14,8 @@ export interface LugonesWeather {
   windKph?: number;
   forecastByDay: Array<{
     date: string;
+    maxTempC: number;
+    minTempC: number;
     hours: Array<{
       time: string;
       temperatureC: number;
@@ -92,10 +94,25 @@ export class WeatherService {
             forecastByDayMap.set(day, dayHours);
           });
 
-          const forecastByDay = Array.from(forecastByDayMap.entries()).map(([date, hours]) => ({
-            date,
-            hours
-          }));
+          const currentTime = current?.time;
+          const currentDay = currentTime?.split('T')[0];
+          const currentHour = currentTime ? `${currentTime.slice(0, 13)}:00` : undefined;
+
+          const forecastByDay = Array.from(forecastByDayMap.entries()).map(([date, hours]) => {
+            const visibleHours =
+              currentHour && currentDay === date
+                ? hours.filter((hour) => hour.time >= currentHour)
+                : hours;
+
+            const temperatures = hours.map((hour) => hour.temperatureC);
+
+            return {
+              date,
+              maxTempC: temperatures.length ? Math.max(...temperatures) : 0,
+              minTempC: temperatures.length ? Math.min(...temperatures) : 0,
+              hours: visibleHours
+            };
+          });
 
           return {
             locationLabel: 'Lugones, Asturias',

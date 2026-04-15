@@ -67,7 +67,10 @@
           <ion-card-content>
             <div class="days-list">
               <section class="day-block" *ngFor="let day of weather.forecastByDay; trackBy: trackByDay">
-                <h3>{{ day.date | date: 'EEEE, d MMMM' }}</h3>
+                <h3>
+                  {{ day.date | date: 'EEEE, d MMMM' }}
+                  · Máx {{ day.maxTempC | number: '1.0-0' }}°C / Mín {{ day.minTempC | number: '1.0-0' }}°C
+                </h3>
                 <div class="hours-row">
                   <div class="hour-item" *ngFor="let hour of day.hours; trackBy: trackByHourTime">
                     <p class="hour-time">{{ hour.time | date: 'HH:mm' }}</p>
