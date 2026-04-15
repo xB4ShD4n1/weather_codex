@@ -99,8 +99,20 @@ h1 {
   backdrop-filter: blur(2px);
 }
 
-.stat-box ion-icon {
+.stat-icon {
   font-size: 1.3rem;
+}
+
+.stat-icon-temp {
+  color: #fb7185;
+}
+
+.stat-icon-humidity {
+  color: #22d3ee;
+}
+
+.stat-icon-wind {
+  color: #93c5fd;
 }
 
 .stat-box p {
@@ -121,6 +133,26 @@ h1 {
   margin-top: 18px;
   background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(8px);
+}
+
+.days-list {
+  display: grid;
+  gap: 16px;
+}
+
+.day-title-row {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #0f172a;
+  text-transform: capitalize;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.day-main-icon {
+  font-size: 1.2rem;
 }
 
 .hours-row {
@@ -153,7 +185,30 @@ h1 {
 .hour-item ion-icon {
   margin: 0;
   font-size: 1.1rem;
-  color: #1d4ed8;
+}
+
+.icon-clear {
+  color: #f59e0b;
+}
+
+.icon-partly {
+  color: #f97316;
+}
+
+.icon-clouds {
+  color: #64748b;
+}
+
+.icon-rain {
+  color: #0ea5e9;
+}
+
+.icon-snow {
+  color: #38bdf8;
+}
+
+.icon-storm {
+  color: #7c3aed;
 }
 
 .hour-item strong {
@@ -161,40 +216,11 @@ h1 {
   font-size: 0.92rem;
 }
 
-.days-list {
-  display: grid;
-  gap: 12px;
-}
-
-.day-block h3 {
-  margin: 0 0 8px;
-  font-size: 0.98rem;
-  text-transform: capitalize;
-  color: #0f172a;
-}
-
-.api-note {
-  margin: 14px 2px 2px;
-  font-size: 0.82rem;
-  color: #475569;
-}
-
 .hour-status {
   margin: 3px 0 0;
   font-size: 0.7rem;
   line-height: 1.2;
   color: #334155;
-}
-
-.days-list {
-  display: grid;
-  gap: 16px;
-}
-
-.day-block h3 {
-  margin: 0 0 10px;
-  font-size: 1rem;
-  color: #0f172a;
 }
 
 .api-note {

@@ -25,6 +25,7 @@
               </div>
               <ion-icon
                 class="hero-icon"
+                [class]="'hero-icon ' + weatherIconClass(weather.weatherCode)"
                 [name]="weatherIconName(weather.weatherCode, weather.isDay)"
               ></ion-icon>
             </div>
@@ -36,21 +37,21 @@
 
             <div class="stats-grid">
               <div class="stat-box">
-                <ion-icon name="thermometer"></ion-icon>
+                <ion-icon name="thermometer-outline" class="stat-icon stat-icon-temp"></ion-icon>
                 <div>
                   <p>Sensación</p>
                   <strong>{{ weather.feelsLikeC ?? '-' }}°C</strong>
                 </div>
               </div>
               <div class="stat-box">
-                <ion-icon name="water"></ion-icon>
+                <ion-icon name="water-outline" class="stat-icon stat-icon-humidity"></ion-icon>
                 <div>
                   <p>Humedad</p>
                   <strong>{{ weather.humidity ?? '-' }}%</strong>
                 </div>
               </div>
               <div class="stat-box stat-box-wide">
-                <ion-icon name="speedometer"></ion-icon>
+                <ion-icon name="speedometer-outline" class="stat-icon stat-icon-wind"></ion-icon>
                 <div>
                   <p>Viento</p>
                   <strong>{{ weather.windKph ?? '-' }} km/h</strong>
@@ -67,15 +68,25 @@
           <ion-card-content>
             <div class="days-list">
               <section class="day-block" *ngFor="let day of weather.forecastByDay; trackBy: trackByDay">
-                <h3>
-                  {{ day.date | date: 'EEEE, d MMMM' }}
-                  · Máx {{ day.maxTempC | number: '1.0-0' }}°C / Mín {{ day.minTempC | number: '1.0-0' }}°C
+                <h3 class="day-title-row">
+                  <span>{{ day.date | date: 'EEEE, d MMMM' }}</span>
+                  <ion-icon
+                    class="day-main-icon"
+                    [class]="'day-main-icon ' + weatherIconClass(day.hours[0]?.weatherCode)"
+                    [name]="predominantWeatherIconName(day)"
+                  ></ion-icon>
+                  <span>
+                    Máx {{ day.maxTempC | number: '1.0-0' }}°C / Mín {{ day.minTempC | number: '1.0-0' }}°C
+                  </span>
                 </h3>
                 <div class="hours-row">
                   <div class="hour-item" *ngFor="let hour of day.hours; trackBy: trackByHourTime">
                     <p class="hour-time">{{ hour.time | date: 'HH:mm' }}</p>
                     <div class="hour-main">
-                      <ion-icon [name]="weatherIconName(hour.weatherCode, hour.isDay)"></ion-icon>
+                      <ion-icon
+                        [class]="weatherIconClass(hour.weatherCode)"
+                        [name]="weatherIconName(hour.weatherCode, hour.isDay)"
+                      ></ion-icon>
                       <strong>{{ hour.temperatureC | number: '1.0-0' }}°C</strong>
                     </div>
                     <p class="hour-status">{{ hour.conditionText }}</p>
