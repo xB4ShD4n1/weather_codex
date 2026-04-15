@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { AsyncPipe, DatePipe, DecimalPipe, NgFor, NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import {
   IonApp,
@@ -27,6 +27,8 @@ import { LugonesWeather, WeatherService } from './weather.service';
     AsyncPipe,
     DatePipe,
     DecimalPipe,
+    NgIf,
+    NgFor,
     IonApp,
     IonHeader,
     IonToolbar,
@@ -54,4 +56,9 @@ export class AppComponent {
     startWith({ state: 'loading' as const, weather: null as LugonesWeather | null }),
     catchError(() => of({ state: 'error' as const, weather: null as LugonesWeather | null }))
   );
+
+  trackByHourTime(index: number, hour: { time: string }): string {
+    return hour.time;
+  }
 }
+

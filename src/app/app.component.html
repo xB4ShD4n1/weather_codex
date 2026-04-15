@@ -6,26 +6,20 @@
   </ion-header>
 
   <ion-content class="ion-padding">
-    @if (vm$ | async; as vm) {
-      @if (vm.state === 'loading') {
-        <ion-progress-bar type="indeterminate"></ion-progress-bar>
-      }
+    <ng-container *ngIf="vm$ | async as vm">
+      <ion-progress-bar *ngIf="vm.state === 'loading'" type="indeterminate"></ion-progress-bar>
 
-      @if (vm.state === 'error') {
-        <ion-card color="danger">
-          <ion-card-content>
-            No se pudo cargar la meteorología. Revisa tu conexión e inténtalo de nuevo.
-          </ion-card-content>
-        </ion-card>
-      }
+      <ion-card *ngIf="vm.state === 'error'" color="danger">
+        <ion-card-content>
+          No se pudo cargar la meteorología. Revisa tu conexión e inténtalo de nuevo.
+        </ion-card-content>
+      </ion-card>
 
-      @if (vm.weather; as weather) {
+      <ng-container *ngIf="vm.weather as weather">
         <ion-card>
           <ion-card-header>
             <ion-card-title>{{ weather.locationLabel }}</ion-card-title>
-            <ion-card-subtitle>
-              Actualizado: {{ weather.updatedAt | date: 'short' }}
-            </ion-card-subtitle>
+            <ion-card-subtitle> Actualizado: {{ weather.updatedAt | date: 'short' }} </ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
             <h1>{{ weather.temperatureC | number: '1.0-0' }} °C</h1>
@@ -55,16 +49,14 @@
           </ion-card-header>
           <ion-card-content>
             <ion-grid>
-              @for (hour of weather.nextHours; track hour.time) {
-                <ion-row>
-                  <ion-col size="8">{{ hour.time | date: 'shortTime' }}</ion-col>
-                  <ion-col size="4">{{ hour.temperatureC | number: '1.0-0' }} °C</ion-col>
-                </ion-row>
-              }
+              <ion-row *ngFor="let hour of weather.nextHours; trackBy: trackByHourTime">
+                <ion-col size="8">{{ hour.time | date: 'shortTime' }}</ion-col>
+                <ion-col size="4">{{ hour.temperatureC | number: '1.0-0' }} °C</ion-col>
+              </ion-row>
             </ion-grid>
           </ion-card-content>
         </ion-card>
-      }
-    }
+      </ng-container>
+    </ng-container>
   </ion-content>
 </ion-app>
