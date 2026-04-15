@@ -186,6 +186,23 @@ h1 {
   color: #334155;
 }
 
+.days-list {
+  display: grid;
+  gap: 16px;
+}
+
+.day-block h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.api-note {
+  margin: 14px 2px 2px;
+  font-size: 0.82rem;
+  color: #475569;
+}
+
 .error-card {
   margin-top: 16px;
 }
