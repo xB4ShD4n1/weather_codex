@@ -4,7 +4,7 @@ Aplicación base para mostrar el tiempo de **Lugones (Asturias)** usando **Open-
 
 ## Requisitos
 
-- Node.js 20+
+- Node.js 22 (recomendado)
 - Angular CLI 20
 
 ## Puesta en marcha
