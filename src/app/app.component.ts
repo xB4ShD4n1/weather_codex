@@ -82,6 +82,10 @@ export class AppComponent {
     catchError(() => of({ state: 'error' as const, weather: null as LugonesWeather | null }))
   );
 
+  trackByDay(index: number, day: { date: string }): string {
+    return day.date;
+  }
+
   trackByHourTime(index: number, hour: { time: string }): string {
     return hour.time;
   }
