@@ -12,7 +12,10 @@ export interface LugonesWeather {
   isDay?: boolean;
   humidity?: number;
   windKph?: number;
-  nextHours: Array<{ time: string; temperatureC: number; weatherCode?: number; isDay?: boolean }>;
+  forecastByDay: Array<{
+    date: string;
+    hours: Array<{ time: string; temperatureC: number; weatherCode?: number; isDay?: boolean }>;
+  }>;
 }
 
 interface OpenMeteoResponse {
@@ -46,7 +49,7 @@ export class WeatherService {
         'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day'
       )
       .set('hourly', 'temperature_2m,weather_code,is_day')
-      .set('forecast_days', '1')
+      .set('forecast_days', '16')
       .set('timezone', 'Europe/Madrid');
 
     return this.http
@@ -59,12 +62,26 @@ export class WeatherService {
           const hourlyCodes = response.hourly?.weather_code ?? [];
           const hourlyIsDay = response.hourly?.is_day ?? [];
 
-          const currentIndex = Math.max(hourlyTimes.indexOf(current?.time ?? ''), 0);
-          const nextHours = hourlyTimes.slice(currentIndex + 1, currentIndex + 7).map((time, i) => ({
-            time,
-            temperatureC: hourlyTemps[currentIndex + 1 + i] ?? 0,
-            weatherCode: hourlyCodes[currentIndex + 1 + i],
-            isDay: hourlyIsDay[currentIndex + 1 + i] === 1
+          const forecastByDayMap = new Map<
+            string,
+            Array<{ time: string; temperatureC: number; weatherCode?: number; isDay?: boolean }>
+          >();
+
+          hourlyTimes.forEach((time, index) => {
+            const day = time.split('T')[0];
+            const dayHours = forecastByDayMap.get(day) ?? [];
+            dayHours.push({
+              time,
+              temperatureC: hourlyTemps[index] ?? 0,
+              weatherCode: hourlyCodes[index],
+              isDay: hourlyIsDay[index] === 1
+            });
+            forecastByDayMap.set(day, dayHours);
+          });
+
+          const forecastByDay = Array.from(forecastByDayMap.entries()).map(([date, hours]) => ({
+            date,
+            hours
           }));
 
           return {
@@ -77,7 +94,7 @@ export class WeatherService {
             isDay: current?.is_day === 1,
             humidity: current?.relative_humidity_2m,
             windKph: current?.wind_speed_10m,
-            nextHours
+            forecastByDay
           };
         })
       );
