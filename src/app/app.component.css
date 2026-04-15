@@ -1,8 +1,157 @@
-h1 {
-  font-size: 3rem;
-  margin: 0 0 8px;
+:host {
+  --surface-glass: rgba(255, 255, 255, 0.16);
+  --text-soft: rgba(255, 255, 255, 0.8);
+}
+
+.app-header ion-toolbar {
+  --background: linear-gradient(120deg, #1e40af, #2563eb 60%, #0ea5e9);
+  --color: #ffffff;
+}
+
+.weather-page {
+  --background: radial-gradient(circle at top left, #e0f2fe 0%, #f8fafc 42%, #e2e8f0 100%);
 }
 
 ion-card {
+  border-radius: 24px;
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.14);
+}
+
+.hero-card {
+  color: #ffffff;
+  overflow: hidden;
+}
+
+.hero-card.theme-clear {
+  background: linear-gradient(160deg, #0284c7, #22d3ee 55%, #0ea5e9);
+}
+
+.hero-card.theme-clouds {
+  background: linear-gradient(160deg, #475569, #64748b 55%, #94a3b8);
+}
+
+.hero-card.theme-rain {
+  background: linear-gradient(160deg, #1d4ed8, #2563eb 55%, #0ea5e9);
+}
+
+.hero-card.theme-snow {
+  background: linear-gradient(160deg, #334155, #64748b 55%, #cbd5e1);
+}
+
+.hero-card.theme-storm {
+  background: linear-gradient(160deg, #1e1b4b, #312e81 55%, #4338ca);
+}
+
+.hero-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.hero-location {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.hero-updated {
+  margin: 4px 0 0;
+  color: var(--text-soft);
+}
+
+.hero-icon {
+  font-size: 3.2rem;
+  padding: 8px;
   border-radius: 16px;
+  background: var(--surface-glass);
+}
+
+.hero-temp-row {
+  margin-top: 20px;
+}
+
+h1 {
+  font-size: 4rem;
+  line-height: 1;
+  margin: 0;
+}
+
+.hero-condition {
+  font-size: 1.1rem;
+  margin: 6px 0 0;
+  color: var(--text-soft);
+}
+
+.stats-grid {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.stat-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: var(--surface-glass);
+  backdrop-filter: blur(2px);
+}
+
+.stat-box ion-icon {
+  font-size: 1.3rem;
+}
+
+.stat-box p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-soft);
+}
+
+.stat-box strong {
+  font-size: 1.02rem;
+}
+
+.stat-box-wide {
+  grid-column: span 2;
+}
+
+.hours-card {
+  margin-top: 18px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(8px);
+}
+
+.hours-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hour-item {
+  border-radius: 14px;
+  padding: 12px 8px;
+  text-align: center;
+  background: linear-gradient(180deg, #eff6ff, #dbeafe);
+}
+
+.hour-item p {
+  margin: 0;
+  color: #475569;
+  font-size: 0.82rem;
+}
+
+.hour-item ion-icon {
+  margin: 8px 0;
+  font-size: 1.4rem;
+  color: #1d4ed8;
+}
+
+.hour-item strong {
+  color: #0f172a;
+}
+
+.error-card {
+  margin-top: 16px;
 }

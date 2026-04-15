@@ -8,9 +8,11 @@ export interface LugonesWeather {
   temperatureC: number;
   feelsLikeC?: number;
   conditionText: string;
+  weatherCode?: number;
+  isDay?: boolean;
   humidity?: number;
   windKph?: number;
-  nextHours: Array<{ time: string; temperatureC: number }>;
+  nextHours: Array<{ time: string; temperatureC: number; weatherCode?: number; isDay?: boolean }>;
 }
 
 interface OpenMeteoResponse {
@@ -21,10 +23,13 @@ interface OpenMeteoResponse {
     apparent_temperature: number;
     weather_code: number;
     wind_speed_10m: number;
+    is_day: number;
   };
   hourly?: {
     time: string[];
     temperature_2m: number[];
+    weather_code: number[];
+    is_day: number[];
   };
 }
 
@@ -38,9 +43,9 @@ export class WeatherService {
       .set('longitude', '-5.8129')
       .set(
         'current',
-        'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m'
+        'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day'
       )
-      .set('hourly', 'temperature_2m')
+      .set('hourly', 'temperature_2m,weather_code,is_day')
       .set('forecast_days', '1')
       .set('timezone', 'Europe/Madrid');
 
@@ -51,11 +56,15 @@ export class WeatherService {
           const current = response.current;
           const hourlyTimes = response.hourly?.time ?? [];
           const hourlyTemps = response.hourly?.temperature_2m ?? [];
+          const hourlyCodes = response.hourly?.weather_code ?? [];
+          const hourlyIsDay = response.hourly?.is_day ?? [];
 
           const currentIndex = Math.max(hourlyTimes.indexOf(current?.time ?? ''), 0);
           const nextHours = hourlyTimes.slice(currentIndex + 1, currentIndex + 7).map((time, i) => ({
             time,
-            temperatureC: hourlyTemps[currentIndex + 1 + i] ?? 0
+            temperatureC: hourlyTemps[currentIndex + 1 + i] ?? 0,
+            weatherCode: hourlyCodes[currentIndex + 1 + i],
+            isDay: hourlyIsDay[currentIndex + 1 + i] === 1
           }));
 
           return {
@@ -64,6 +73,8 @@ export class WeatherService {
             temperatureC: current?.temperature_2m ?? 0,
             feelsLikeC: current?.apparent_temperature,
             conditionText: this.weatherCodeToText(current?.weather_code),
+            weatherCode: current?.weather_code,
+            isDay: current?.is_day === 1,
             humidity: current?.relative_humidity_2m,
             windKph: current?.wind_speed_10m,
             nextHours
