@@ -19,13 +19,39 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": ["src/styles.css"],
             "scripts": []
-          }
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "outputHashing": "all"
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true,
+              "outputHashing": "none"
+            }
+          },
+          "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "buildTarget": "weather-codex:build"
-          }
+            "buildTarget": "weather-codex:build:development"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "weather-codex:build:production"
+            },
+            "development": {
+              "buildTarget": "weather-codex:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
         }
       }
     }
