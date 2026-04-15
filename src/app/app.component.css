@@ -125,7 +125,7 @@ h1 {
 
 .hours-row {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -150,6 +150,23 @@ h1 {
 
 .hour-item strong {
   color: #0f172a;
+}
+
+.days-list {
+  display: grid;
+  gap: 16px;
+}
+
+.day-block h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #0f172a;
+}
+
+.api-note {
+  margin: 14px 2px 2px;
+  font-size: 0.82rem;
+  color: #475569;
 }
 
 .error-card {
