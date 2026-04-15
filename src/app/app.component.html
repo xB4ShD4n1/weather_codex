@@ -62,17 +62,28 @@
 
         <ion-card class="hours-card">
           <ion-card-header>
-            <ion-card-title>Próximas horas</ion-card-title>
-            <ion-card-subtitle>Evolución prevista para hoy</ion-card-subtitle>
+            <ion-card-title>Pronóstico completo</ion-card-title>
+            <ion-card-subtitle>Vista compacta por días</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
-            <div class="hours-row">
-              <div class="hour-item" *ngFor="let hour of weather.nextHours; trackBy: trackByHourTime">
-                <p>{{ hour.time | date: 'shortTime' }}</p>
-                <ion-icon [name]="weatherIconName(hour.weatherCode, hour.isDay)"></ion-icon>
-                <strong>{{ hour.temperatureC | number: '1.0-0' }}°C</strong>
-              </div>
+            <div class="days-list">
+              <section class="day-block" *ngFor="let day of weather.forecastByDay; trackBy: trackByDay">
+                <h3>{{ day.date | date: 'EEEE, d MMMM' }}</h3>
+                <div class="hours-row">
+                  <div class="hour-item" *ngFor="let hour of day.hours; trackBy: trackByHourTime">
+                    <p class="hour-time">{{ hour.time | date: 'HH:mm' }}</p>
+                    <div class="hour-main">
+                      <ion-icon [name]="weatherIconName(hour.weatherCode, hour.isDay)"></ion-icon>
+                      <strong>{{ hour.temperatureC | number: '1.0-0' }}°C</strong>
+                    </div>
+                    <p class="hour-status">{{ hour.conditionText }}</p>
+                  </div>
+                </div>
+              </section>
             </div>
+            <p class="api-note">
+              Mostrando {{ weather.forecastByDay.length }} día(s) de previsión horaria.
+            </p>
           </ion-card-content>
         </ion-card>
       </ng-container>
