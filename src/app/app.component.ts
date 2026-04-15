@@ -86,7 +86,7 @@ export class AppComponent {
     return day.date;
   }
 
-  trackByHourTime(index: number, hour: { time: string }): string {
+  trackByHourTime(index: number, hour: { time: string; conditionText: string }): string {
     return hour.time;
   }
 

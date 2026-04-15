@@ -14,7 +14,13 @@ export interface LugonesWeather {
   windKph?: number;
   forecastByDay: Array<{
     date: string;
-    hours: Array<{ time: string; temperatureC: number; weatherCode?: number; isDay?: boolean }>;
+    hours: Array<{
+      time: string;
+      temperatureC: number;
+      conditionText: string;
+      weatherCode?: number;
+      isDay?: boolean;
+    }>;
   }>;
 }
 
@@ -64,7 +70,13 @@ export class WeatherService {
 
           const forecastByDayMap = new Map<
             string,
-            Array<{ time: string; temperatureC: number; weatherCode?: number; isDay?: boolean }>
+            Array<{
+              time: string;
+              temperatureC: number;
+              conditionText: string;
+              weatherCode?: number;
+              isDay?: boolean;
+            }>
           >();
 
           hourlyTimes.forEach((time, index) => {
@@ -73,6 +85,7 @@ export class WeatherService {
             dayHours.push({
               time,
               temperatureC: hourlyTemps[index] ?? 0,
+              conditionText: this.weatherCodeToText(hourlyCodes[index]),
               weatherCode: hourlyCodes[index],
               isDay: hourlyIsDay[index] === 1
             });
