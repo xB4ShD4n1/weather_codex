@@ -10,7 +10,6 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonLabel,
   IonProgressBar,
   IonTitle,
   IonToolbar
@@ -18,7 +17,7 @@ import {
 import { addIcons } from 'ionicons';
 import {
   cloud,
-  cloudNight,
+  cloudyNight,
   partlySunny,
   rainy,
   snow,
@@ -52,7 +51,6 @@ import { LugonesWeather, WeatherService } from './weather.service';
     IonCardTitle,
     IonCardSubtitle,
     IonCardContent,
-    IonLabel,
     IonProgressBar,
     IonIcon
   ],
@@ -68,7 +66,7 @@ export class AppComponent {
       moon,
       partlySunny,
       cloud,
-      cloudNight,
+      cloudyNight,
       rainy,
       snow,
       thunderstorm,
@@ -102,7 +100,7 @@ export class AppComponent {
     }
 
     if (code === 3 || code === 45 || code === 48) {
-      return isDay ? 'cloud' : 'cloud-night';
+      return isDay ? 'cloud' : 'cloudy-night';
     }
 
     if ((code >= 51 && code <= 65) || (code >= 80 && code <= 82)) {
