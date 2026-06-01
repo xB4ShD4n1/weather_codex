@@ -5,14 +5,10 @@ import {
   IonCard,
   IonCardContent,
   IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
   IonContent,
-  IonHeader,
   IonIcon,
   IonProgressBar,
-  IonTitle,
-  IonToolbar
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -42,14 +38,10 @@ import { LugonesWeather, WeatherService } from './weather.service';
     NgFor,
     NgClass,
     IonApp,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
     IonContent,
     IonCard,
     IonCardHeader,
     IonCardTitle,
-    IonCardSubtitle,
     IonCardContent,
     IonProgressBar,
     IonIcon
