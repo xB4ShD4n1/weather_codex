@@ -1,10 +1,4 @@
 <ion-app>
-  <ion-header class="app-header">
-    <ion-toolbar>
-      <ion-title>Tiempo en Lugones</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
   <ion-content class="weather-page ion-padding">
     <ng-container *ngIf="vm$ | async as vm">
       <ion-progress-bar *ngIf="vm.state === 'loading'" type="indeterminate"></ion-progress-bar>

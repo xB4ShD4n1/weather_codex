@@ -3,11 +3,6 @@
   --text-soft: rgba(255, 255, 255, 0.8);
 }
 
-.app-header ion-toolbar {
-  --background: linear-gradient(120deg, #1e40af, #2563eb 60%, #0ea5e9);
-  --color: #ffffff;
-}
-
 .weather-page {
   --background: radial-gradient(circle at top left, #e0f2fe 0%, #f8fafc 42%, #e2e8f0 100%);
 }
