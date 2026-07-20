@@ -27,6 +27,7 @@ export interface LocationWeather {
     sunset: Date;
     moonrise?: Date;
     moonset?: Date;
+    moonPhase?: 'Luna nueva' | 'Luna llena';
     hours: Array<{
       time: string;
       temperatureC: number;
@@ -119,6 +120,7 @@ export class WeatherService {
             const calculationDate = new Date(`${date}T12:00:00Z`);
             const sunTimes = SunCalc.getTimes(calculationDate, location.latitude, location.longitude);
             const moonTimes = SunCalc.getMoonTimes(calculationDate, location.latitude, location.longitude);
+            const moonPhase = this.moonPhaseLabel(SunCalc.getMoonIllumination(calculationDate).phase);
 
             return {
               date,
@@ -128,6 +130,7 @@ export class WeatherService {
               sunset: sunTimes.sunset,
               moonrise: moonTimes.rise,
               moonset: moonTimes.set,
+              moonPhase,
               hours: visibleHours
             };
           });
@@ -146,6 +149,20 @@ export class WeatherService {
           };
         })
       );
+  }
+
+  private moonPhaseLabel(phase: number): 'Luna nueva' | 'Luna llena' | undefined {
+    const phaseThreshold = 0.04;
+
+    if (phase <= phaseThreshold || phase >= 1 - phaseThreshold) {
+      return 'Luna nueva';
+    }
+
+    if (Math.abs(phase - 0.5) <= phaseThreshold) {
+      return 'Luna llena';
+    }
+
+    return undefined;
   }
 
   private weatherCodeToText(code?: number): string {

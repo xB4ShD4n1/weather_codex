@@ -126,6 +126,7 @@
                   <ion-icon name="moon-outline"></ion-icon>
                   <span>Salida luna: {{ day.moonrise ? (day.moonrise | date: 'HH:mm') : '—' }}</span>
                   <span>Puesta: {{ day.moonset ? (day.moonset | date: 'HH:mm') : '—' }}</span>
+                  <strong *ngIf="day.moonPhase" class="moon-phase">{{ day.moonPhase }}</strong>
                 </p>
                 <div class="hours-row" *ngIf="isDayExpanded(day.date, weather.updatedAt)">
                   <div class="hour-item" *ngFor="let hour of day.hours; trackBy: trackByHourTime">

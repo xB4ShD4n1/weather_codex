@@ -240,6 +240,11 @@ h1 {
   color: #6366f1;
 }
 
+.moon-phase {
+  color: #4338ca;
+  font-weight: 700;
+}
+
 .hours-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
