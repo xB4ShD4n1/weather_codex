@@ -1,8 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import * as SunCalc from 'suncalc';
 
-export interface LugonesWeather {
+export interface WeatherLocation {
+  label: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationWeather {
   locationLabel: string;
   updatedAt: string;
   temperatureC: number;
@@ -16,6 +23,11 @@ export interface LugonesWeather {
     date: string;
     maxTempC: number;
     minTempC: number;
+    sunrise: Date;
+    sunset: Date;
+    moonrise?: Date;
+    moonset?: Date;
+    moonPhase?: 'Luna nueva' | 'Luna llena';
     hours: Array<{
       time: string;
       temperatureC: number;
@@ -48,10 +60,10 @@ interface OpenMeteoResponse {
 export class WeatherService {
   private readonly http = inject(HttpClient);
 
-  getLugonesWeather(): Observable<LugonesWeather> {
+  getWeather(location: WeatherLocation): Observable<LocationWeather> {
     const params = new HttpParams()
-      .set('latitude', '43.4021')
-      .set('longitude', '-5.8129')
+      .set('latitude', location.latitude)
+      .set('longitude', location.longitude)
       .set(
         'current',
         'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day'
@@ -97,6 +109,12 @@ export class WeatherService {
           const currentTime = current?.time;
           const currentDay = currentTime?.split('T')[0];
           const currentHour = currentTime ? `${currentTime.slice(0, 13)}:00` : undefined;
+          const moonPhases = Array.from(forecastByDayMap.keys()).map((date) => ({
+            date,
+            phase: SunCalc.getMoonIllumination(new Date(`${date}T12:00:00Z`)).phase
+          }));
+          const closestNewMoonDate = this.closestMoonPhaseDate(moonPhases, (phase) => Math.min(phase, 1 - phase));
+          const closestFullMoonDate = this.closestMoonPhaseDate(moonPhases, (phase) => Math.abs(phase - 0.5));
 
           const forecastByDay = Array.from(forecastByDayMap.entries()).map(([date, hours]) => {
             const visibleHours =
@@ -105,17 +123,30 @@ export class WeatherService {
                 : hours;
 
             const temperatures = hours.map((hour) => hour.temperatureC);
+            const calculationDate = new Date(`${date}T12:00:00Z`);
+            const sunTimes = SunCalc.getTimes(calculationDate, location.latitude, location.longitude);
+            const moonTimes = SunCalc.getMoonTimes(calculationDate, location.latitude, location.longitude);
+            const moonPhase = this.moonPhaseLabel(
+              SunCalc.getMoonIllumination(calculationDate).phase,
+              date === closestNewMoonDate,
+              date === closestFullMoonDate
+            );
 
             return {
               date,
               maxTempC: temperatures.length ? Math.max(...temperatures) : 0,
               minTempC: temperatures.length ? Math.min(...temperatures) : 0,
+              sunrise: sunTimes.sunrise,
+              sunset: sunTimes.sunset,
+              moonrise: moonTimes.rise,
+              moonset: moonTimes.set,
+              moonPhase,
               hours: visibleHours
             };
           });
 
           return {
-            locationLabel: 'Lugones, Asturias',
+            locationLabel: location.label,
             updatedAt: current?.time ?? new Date().toISOString(),
             temperatureC: current?.temperature_2m ?? 0,
             feelsLikeC: current?.apparent_temperature,
@@ -128,6 +159,35 @@ export class WeatherService {
           };
         })
       );
+  }
+
+  private closestMoonPhaseDate(
+    moonPhases: Array<{ date: string; phase: number }>,
+    distanceFromPhase: (phase: number) => number
+  ): string | undefined {
+    return moonPhases.reduce<{ date: string; distance: number } | undefined>((closest, current) => {
+      const distance = distanceFromPhase(current.phase);
+
+      return !closest || distance < closest.distance ? { date: current.date, distance } : closest;
+    }, undefined)?.date;
+  }
+
+  private moonPhaseLabel(
+    phase: number,
+    isClosestNewMoon: boolean,
+    isClosestFullMoon: boolean
+  ): 'Luna nueva' | 'Luna llena' | undefined {
+    const phaseThreshold = 0.04;
+
+    if (isClosestNewMoon && (phase <= phaseThreshold || phase >= 1 - phaseThreshold)) {
+      return 'Luna nueva';
+    }
+
+    if (isClosestFullMoon && Math.abs(phase - 0.5) <= phaseThreshold) {
+      return 'Luna llena';
+    }
+
+    return undefined;
   }
 
   private weatherCodeToText(code?: number): string {
