@@ -15,6 +15,8 @@ import {
   cloudOutline,
   cloudyNightOutline,
   chevronDownOutline,
+  chevronBackOutline,
+  chevronForwardOutline,
   chevronUpOutline,
   partlySunnyOutline,
   rainyOutline,
@@ -26,8 +28,8 @@ import {
   sunnyOutline,
   moonOutline
 } from 'ionicons/icons';
-import { catchError, map, of, startWith } from 'rxjs';
-import { LugonesWeather, WeatherService } from './weather.service';
+import { BehaviorSubject, catchError, map, of, startWith, switchMap } from 'rxjs';
+import { LocationWeather, WeatherLocation, WeatherService } from './weather.service';
 
 @Component({
   selector: 'app-root',
@@ -61,7 +63,9 @@ export class AppComponent {
       partlySunnyOutline,
       cloudOutline,
       cloudyNightOutline,
+      chevronBackOutline,
       chevronDownOutline,
+      chevronForwardOutline,
       chevronUpOutline,
       rainyOutline,
       snowOutline,
@@ -72,10 +76,23 @@ export class AppComponent {
     });
   }
 
-  readonly vm$ = this.weatherService.getLugonesWeather().pipe(
-    map((weather) => ({ state: 'ready' as const, weather })),
-    startWith({ state: 'loading' as const, weather: null as LugonesWeather | null }),
-    catchError(() => of({ state: 'error' as const, weather: null as LugonesWeather | null }))
+  readonly locations: WeatherLocation[] = [
+    { label: 'Lugones, Asturias', latitude: 43.4021, longitude: -5.8129 },
+    { label: 'Ferreras de Arriba, Zamora', latitude: 42.899, longitude: -6.196 }
+  ];
+
+  private readonly selectedLocationIndex$ = new BehaviorSubject(0);
+  private activeLocationIndex = 0;
+  private touchStart?: { x: number; y: number };
+
+  readonly vm$ = this.selectedLocationIndex$.pipe(
+    switchMap((index) =>
+      this.weatherService.getWeather(this.locations[index]).pipe(
+        map((weather) => ({ state: 'ready' as const, weather })),
+        startWith({ state: 'loading' as const, weather: null as LocationWeather | null }),
+        catchError(() => of({ state: 'error' as const, weather: null as LocationWeather | null }))
+      )
+    )
   );
 
   private readonly expandedDayDates = new Set<string>();
@@ -95,6 +112,39 @@ export class AppComponent {
     }
 
     this.expandedDayDates.add(dayDate);
+  }
+
+  onTouchStart(event: Event): void {
+    const touch = (event as TouchEvent).touches[0];
+    this.touchStart = touch ? { x: touch.clientX, y: touch.clientY } : undefined;
+  }
+
+  onTouchEnd(event: Event): void {
+    const touch = (event as TouchEvent).changedTouches[0];
+    if (!this.touchStart || !touch) {
+      return;
+    }
+
+    const horizontalDistance = this.touchStart.x - touch.clientX;
+    const verticalDistance = this.touchStart.y - touch.clientY;
+    this.touchStart = undefined;
+
+    if (Math.abs(horizontalDistance) < 60 || Math.abs(horizontalDistance) <= Math.abs(verticalDistance)) {
+      return;
+    }
+
+    this.changeLocation(horizontalDistance > 0 ? 1 : -1);
+  }
+
+  changeLocation(direction: 1 | -1): void {
+    const nextIndex = this.activeLocationIndex + direction;
+    if (nextIndex < 0 || nextIndex >= this.locations.length) {
+      return;
+    }
+
+    this.activeLocationIndex = nextIndex;
+    this.expandedDayDates.clear();
+    this.selectedLocationIndex$.next(nextIndex);
   }
 
   trackByDay(index: number, day: { date: string }): string {

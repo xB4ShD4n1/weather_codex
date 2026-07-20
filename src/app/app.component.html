@@ -1,5 +1,5 @@
 <ion-app>
-  <ion-content class="weather-page ion-padding">
+  <ion-content class="weather-page ion-padding" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
     <ng-container *ngIf="vm$ | async as vm">
       <ion-progress-bar *ngIf="vm.state === 'loading'" type="indeterminate"></ion-progress-bar>
 
@@ -54,6 +54,28 @@
             </div>
           </ion-card-content>
         </ion-card>
+
+        <div class="location-navigation" aria-label="Cambiar localidad">
+          <button
+            class="location-navigation-button"
+            type="button"
+            (click)="changeLocation(-1)"
+            [disabled]="weather.locationLabel === locations[0].label"
+            aria-label="Ver el tiempo en Lugones"
+          >
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+          <p>Desliza para cambiar de localidad</p>
+          <button
+            class="location-navigation-button"
+            type="button"
+            (click)="changeLocation(1)"
+            [disabled]="weather.locationLabel === locations[locations.length - 1].label"
+            aria-label="Ver el tiempo en Ferreras de Arriba"
+          >
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
 
         <ion-card class="hours-card">
           <ion-card-header>

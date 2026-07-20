@@ -17,6 +17,47 @@ ion-card {
   overflow: hidden;
 }
 
+.location-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 2px;
+  color: #475569;
+}
+
+.location-navigation p {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.location-navigation-button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.location-navigation-button ion-icon {
+  font-size: 1.2rem;
+}
+
+.location-navigation-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.location-navigation-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
 .hero-card.theme-clear {
   background: linear-gradient(160deg, #0284c7, #22d3ee 55%, #0ea5e9);
 }
