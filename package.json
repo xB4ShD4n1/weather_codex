@@ -10,14 +10,14 @@
     "build:pages": "ng build --configuration production --base-href \"/weather_codex/\""
   },
   "dependencies": {
-    "@angular/animations": "^20.0.0",
-    "@angular/common": "^20.0.0",
-    "@angular/compiler": "^20.0.0",
-    "@angular/core": "^20.0.0",
-    "@angular/forms": "^20.0.0",
-    "@angular/platform-browser": "^20.0.0",
-    "@angular/platform-browser-dynamic": "^20.0.0",
-    "@angular/router": "^20.0.0",
+    "@angular/animations": "20.3.26",
+    "@angular/common": "20.3.26",
+    "@angular/compiler": "20.3.26",
+    "@angular/core": "20.3.26",
+    "@angular/forms": "20.3.26",
+    "@angular/platform-browser": "20.3.26",
+    "@angular/platform-browser-dynamic": "20.3.26",
+    "@angular/router": "20.3.26",
     "@capacitor/android": "^7.0.0",
     "@capacitor/cli": "^7.0.0",
     "@capacitor/core": "^7.0.0",
@@ -25,14 +25,16 @@
     "@ionic/angular": "^8.0.0",
     "ionicons": "^8.0.0",
     "rxjs": "^7.8.0",
+    "suncalc": "1.9.0",
     "tslib": "^2.6.0",
     "zone.js": "^0.15.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^20.0.0",
-    "@angular/cli": "^20.0.0",
-    "@angular/compiler-cli": "^20.0.0",
+    "@angular-devkit/build-angular": "20.3.32",
+    "@angular/cli": "20.3.32",
+    "@angular/compiler-cli": "20.3.26",
     "@types/node": "^22.0.0",
+    "@types/suncalc": "1.9.0",
     "typescript": "^5.8.0"
   }
 }
