@@ -14,6 +14,8 @@ import { addIcons } from 'ionicons';
 import {
   cloudOutline,
   cloudyNightOutline,
+  chevronDownOutline,
+  chevronUpOutline,
   partlySunnyOutline,
   rainyOutline,
   snowOutline,
@@ -59,6 +61,8 @@ export class AppComponent {
       partlySunnyOutline,
       cloudOutline,
       cloudyNightOutline,
+      chevronDownOutline,
+      chevronUpOutline,
       rainyOutline,
       snowOutline,
       thunderstormOutline,
@@ -73,6 +77,25 @@ export class AppComponent {
     startWith({ state: 'loading' as const, weather: null as LugonesWeather | null }),
     catchError(() => of({ state: 'error' as const, weather: null as LugonesWeather | null }))
   );
+
+  private readonly expandedDayDates = new Set<string>();
+
+  isCurrentDay(dayDate: string, updatedAt: string): boolean {
+    return dayDate === updatedAt.split('T')[0];
+  }
+
+  isDayExpanded(dayDate: string, updatedAt: string): boolean {
+    return this.isCurrentDay(dayDate, updatedAt) || this.expandedDayDates.has(dayDate);
+  }
+
+  toggleDay(dayDate: string): void {
+    if (this.expandedDayDates.has(dayDate)) {
+      this.expandedDayDates.delete(dayDate);
+      return;
+    }
+
+    this.expandedDayDates.add(dayDate);
+  }
 
   trackByDay(index: number, day: { date: string }): string {
     return day.date;

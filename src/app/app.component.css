@@ -146,8 +146,31 @@ h1 {
   flex-wrap: wrap;
 }
 
+.day-toggle {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.day-toggle:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 .day-main-icon {
   font-size: 1.2rem;
+}
+
+.day-toggle-icon {
+  margin-left: auto;
+  font-size: 1.2rem;
+  color: #475569;
 }
 
 .hours-row {
