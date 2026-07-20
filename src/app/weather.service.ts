@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import * as SunCalc from 'suncalc';
 
 export interface WeatherLocation {
   label: string;
@@ -22,6 +23,8 @@ export interface LocationWeather {
     date: string;
     maxTempC: number;
     minTempC: number;
+    moonrise?: Date;
+    moonset?: Date;
     hours: Array<{
       time: string;
       temperatureC: number;
@@ -111,11 +114,14 @@ export class WeatherService {
                 : hours;
 
             const temperatures = hours.map((hour) => hour.temperatureC);
+            const moonTimes = SunCalc.getMoonTimes(new Date(`${date}T12:00:00Z`), location.latitude, location.longitude);
 
             return {
               date,
               maxTempC: temperatures.length ? Math.max(...temperatures) : 0,
               minTempC: temperatures.length ? Math.min(...temperatures) : 0,
+              moonrise: moonTimes.rise,
+              moonset: moonTimes.set,
               hours: visibleHours
             };
           });

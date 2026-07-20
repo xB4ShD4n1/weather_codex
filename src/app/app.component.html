@@ -117,6 +117,11 @@
                     ></ion-icon>
                   </button>
                 </ng-template>
+                <p class="moon-times">
+                  <ion-icon name="moon-outline"></ion-icon>
+                  <span>Salida: {{ day.moonrise ? (day.moonrise | date: 'HH:mm') : '—' }}</span>
+                  <span>Puesta: {{ day.moonset ? (day.moonset | date: 'HH:mm') : '—' }}</span>
+                </p>
                 <div class="hours-row" *ngIf="isDayExpanded(day.date, weather.updatedAt)">
                   <div class="hour-item" *ngFor="let hour of day.hours; trackBy: trackByHourTime">
                     <p class="hour-time">{{ hour.time | date: 'HH:mm' }}</p>
