@@ -1,11 +1,5 @@
 <ion-app>
-  <ion-header class="app-header">
-    <ion-toolbar>
-      <ion-title>Tiempo en Lugones</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <ion-content class="weather-page ion-padding">
+  <ion-content class="weather-page ion-padding" (touchstart)="onTouchStart($event)" (touchend)="onTouchEnd($event)">
     <ng-container *ngIf="vm$ | async as vm">
       <ion-progress-bar *ngIf="vm.state === 'loading'" type="indeterminate"></ion-progress-bar>
 
@@ -61,6 +55,28 @@
           </ion-card-content>
         </ion-card>
 
+        <div class="location-navigation" aria-label="Cambiar localidad">
+          <button
+            class="location-navigation-button"
+            type="button"
+            (click)="changeLocation(-1)"
+            [disabled]="weather.locationLabel === locations[0].label"
+            aria-label="Ver el tiempo en Lugones"
+          >
+            <ion-icon name="chevron-back-outline"></ion-icon>
+          </button>
+          <p>Desliza para cambiar de localidad</p>
+          <button
+            class="location-navigation-button"
+            type="button"
+            (click)="changeLocation(1)"
+            [disabled]="weather.locationLabel === locations[locations.length - 1].label"
+            aria-label="Ver el tiempo en Ferreras de Arriba"
+          >
+            <ion-icon name="chevron-forward-outline"></ion-icon>
+          </button>
+        </div>
+
         <ion-card class="hours-card">
           <ion-card-header>
             <ion-card-title>Pronóstico completo</ion-card-title>
@@ -68,7 +84,7 @@
           <ion-card-content>
             <div class="days-list">
               <section class="day-block" *ngFor="let day of weather.forecastByDay; trackBy: trackByDay">
-                <h3 class="day-title-row">
+                <h3 class="day-title-row" *ngIf="isCurrentDay(day.date, weather.updatedAt); else collapsibleDay">
                   <span>{{ day.date | date: 'EEEE, d MMMM' }}</span>
                   <ion-icon
                     class="day-main-icon"
@@ -79,7 +95,39 @@
                     Máx {{ day.maxTempC | number: '1.0-0' }}°C / Mín {{ day.minTempC | number: '1.0-0' }}°C
                   </span>
                 </h3>
-                <div class="hours-row">
+                <ng-template #collapsibleDay>
+                  <button
+                    class="day-title-row day-toggle"
+                    type="button"
+                    [attr.aria-expanded]="isDayExpanded(day.date, weather.updatedAt)"
+                    (click)="toggleDay(day.date)"
+                  >
+                    <span>{{ day.date | date: 'EEEE, d MMMM' }}</span>
+                    <ion-icon
+                      class="day-main-icon"
+                      [class]="'day-main-icon ' + weatherIconClass(day.hours[0]?.weatherCode)"
+                      [name]="predominantWeatherIconName(day)"
+                    ></ion-icon>
+                    <span>
+                      Máx {{ day.maxTempC | number: '1.0-0' }}°C / Mín {{ day.minTempC | number: '1.0-0' }}°C
+                    </span>
+                    <ion-icon
+                      class="day-toggle-icon"
+                      [name]="isDayExpanded(day.date, weather.updatedAt) ? 'chevron-up-outline' : 'chevron-down-outline'"
+                    ></ion-icon>
+                  </button>
+                </ng-template>
+                <p class="astronomy-times sun-times">
+                  <ion-icon name="sunny-outline"></ion-icon>
+                  <span>Salida sol: {{ day.sunrise | date: 'HH:mm' }}</span>
+                  <span>Puesta: {{ day.sunset | date: 'HH:mm' }}</span>
+                </p>
+                <p class="astronomy-times moon-times">
+                  <ion-icon name="moon-outline"></ion-icon>
+                  <span>Salida luna: {{ day.moonrise ? (day.moonrise | date: 'HH:mm') : '—' }}</span>
+                  <span>Puesta: {{ day.moonset ? (day.moonset | date: 'HH:mm') : '—' }}</span>
+                </p>
+                <div class="hours-row" *ngIf="isDayExpanded(day.date, weather.updatedAt)">
                   <div class="hour-item" *ngFor="let hour of day.hours; trackBy: trackByHourTime">
                     <p class="hour-time">{{ hour.time | date: 'HH:mm' }}</p>
                     <div class="hour-main">
