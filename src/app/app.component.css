@@ -214,7 +214,7 @@ h1 {
   color: #475569;
 }
 
-.moon-times {
+.astronomy-times {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -224,9 +224,20 @@ h1 {
   font-size: 0.78rem;
 }
 
+.astronomy-times ion-icon {
+  font-size: 1rem;
+}
+
+.sun-times {
+  margin-bottom: 3px;
+}
+
+.sun-times ion-icon {
+  color: #f59e0b;
+}
+
 .moon-times ion-icon {
   color: #6366f1;
-  font-size: 1rem;
 }
 
 .hours-row {

@@ -117,9 +117,14 @@
                     ></ion-icon>
                   </button>
                 </ng-template>
-                <p class="moon-times">
+                <p class="astronomy-times sun-times">
+                  <ion-icon name="sunny-outline"></ion-icon>
+                  <span>Salida sol: {{ day.sunrise | date: 'HH:mm' }}</span>
+                  <span>Puesta: {{ day.sunset | date: 'HH:mm' }}</span>
+                </p>
+                <p class="astronomy-times moon-times">
                   <ion-icon name="moon-outline"></ion-icon>
-                  <span>Salida: {{ day.moonrise ? (day.moonrise | date: 'HH:mm') : '—' }}</span>
+                  <span>Salida luna: {{ day.moonrise ? (day.moonrise | date: 'HH:mm') : '—' }}</span>
                   <span>Puesta: {{ day.moonset ? (day.moonset | date: 'HH:mm') : '—' }}</span>
                 </p>
                 <div class="hours-row" *ngIf="isDayExpanded(day.date, weather.updatedAt)">

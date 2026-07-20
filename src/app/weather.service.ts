@@ -23,6 +23,8 @@ export interface LocationWeather {
     date: string;
     maxTempC: number;
     minTempC: number;
+    sunrise: Date;
+    sunset: Date;
     moonrise?: Date;
     moonset?: Date;
     hours: Array<{
@@ -114,12 +116,16 @@ export class WeatherService {
                 : hours;
 
             const temperatures = hours.map((hour) => hour.temperatureC);
-            const moonTimes = SunCalc.getMoonTimes(new Date(`${date}T12:00:00Z`), location.latitude, location.longitude);
+            const calculationDate = new Date(`${date}T12:00:00Z`);
+            const sunTimes = SunCalc.getTimes(calculationDate, location.latitude, location.longitude);
+            const moonTimes = SunCalc.getMoonTimes(calculationDate, location.latitude, location.longitude);
 
             return {
               date,
               maxTempC: temperatures.length ? Math.max(...temperatures) : 0,
               minTempC: temperatures.length ? Math.min(...temperatures) : 0,
+              sunrise: sunTimes.sunrise,
+              sunset: sunTimes.sunset,
               moonrise: moonTimes.rise,
               moonset: moonTimes.set,
               hours: visibleHours
