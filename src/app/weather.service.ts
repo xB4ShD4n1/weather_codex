@@ -1,8 +1,15 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
+import * as SunCalc from 'suncalc';
 
-export interface LugonesWeather {
+export interface WeatherLocation {
+  label: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationWeather {
   locationLabel: string;
   updatedAt: string;
   temperatureC: number;
@@ -16,6 +23,8 @@ export interface LugonesWeather {
     date: string;
     maxTempC: number;
     minTempC: number;
+    moonrise?: Date;
+    moonset?: Date;
     hours: Array<{
       time: string;
       temperatureC: number;
@@ -48,10 +57,10 @@ interface OpenMeteoResponse {
 export class WeatherService {
   private readonly http = inject(HttpClient);
 
-  getLugonesWeather(): Observable<LugonesWeather> {
+  getWeather(location: WeatherLocation): Observable<LocationWeather> {
     const params = new HttpParams()
-      .set('latitude', '43.4021')
-      .set('longitude', '-5.8129')
+      .set('latitude', location.latitude)
+      .set('longitude', location.longitude)
       .set(
         'current',
         'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day'
@@ -105,17 +114,20 @@ export class WeatherService {
                 : hours;
 
             const temperatures = hours.map((hour) => hour.temperatureC);
+            const moonTimes = SunCalc.getMoonTimes(new Date(`${date}T12:00:00Z`), location.latitude, location.longitude);
 
             return {
               date,
               maxTempC: temperatures.length ? Math.max(...temperatures) : 0,
               minTempC: temperatures.length ? Math.min(...temperatures) : 0,
+              moonrise: moonTimes.rise,
+              moonset: moonTimes.set,
               hours: visibleHours
             };
           });
 
           return {
-            locationLabel: 'Lugones, Asturias',
+            locationLabel: location.label,
             updatedAt: current?.time ?? new Date().toISOString(),
             temperatureC: current?.temperature_2m ?? 0,
             feelsLikeC: current?.apparent_temperature,
