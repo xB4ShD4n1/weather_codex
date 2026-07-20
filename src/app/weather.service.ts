@@ -2,7 +2,13 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
-export interface LugonesWeather {
+export interface WeatherLocation {
+  label: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface LocationWeather {
   locationLabel: string;
   updatedAt: string;
   temperatureC: number;
@@ -48,10 +54,10 @@ interface OpenMeteoResponse {
 export class WeatherService {
   private readonly http = inject(HttpClient);
 
-  getLugonesWeather(): Observable<LugonesWeather> {
+  getWeather(location: WeatherLocation): Observable<LocationWeather> {
     const params = new HttpParams()
-      .set('latitude', '43.4021')
-      .set('longitude', '-5.8129')
+      .set('latitude', location.latitude)
+      .set('longitude', location.longitude)
       .set(
         'current',
         'temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m,is_day'
@@ -115,7 +121,7 @@ export class WeatherService {
           });
 
           return {
-            locationLabel: 'Lugones, Asturias',
+            locationLabel: location.label,
             updatedAt: current?.time ?? new Date().toISOString(),
             temperatureC: current?.temperature_2m ?? 0,
             feelsLikeC: current?.apparent_temperature,

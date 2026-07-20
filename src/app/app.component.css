@@ -3,11 +3,6 @@
   --text-soft: rgba(255, 255, 255, 0.8);
 }
 
-.app-header ion-toolbar {
-  --background: linear-gradient(120deg, #1e40af, #2563eb 60%, #0ea5e9);
-  --color: #ffffff;
-}
-
 .weather-page {
   --background: radial-gradient(circle at top left, #e0f2fe 0%, #f8fafc 42%, #e2e8f0 100%);
 }
@@ -20,6 +15,47 @@ ion-card {
 .hero-card {
   color: #ffffff;
   overflow: hidden;
+}
+
+.location-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin: 8px 0 2px;
+  color: #475569;
+}
+
+.location-navigation p {
+  margin: 0;
+  font-size: 0.78rem;
+}
+
+.location-navigation-button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.72);
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.location-navigation-button ion-icon {
+  font-size: 1.2rem;
+}
+
+.location-navigation-button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.location-navigation-button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
 }
 
 .hero-card.theme-clear {
@@ -151,8 +187,31 @@ h1 {
   flex-wrap: wrap;
 }
 
+.day-toggle {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.day-toggle:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
 .day-main-icon {
   font-size: 1.2rem;
+}
+
+.day-toggle-icon {
+  margin-left: auto;
+  font-size: 1.2rem;
+  color: #475569;
 }
 
 .hours-row {
