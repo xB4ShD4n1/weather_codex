@@ -109,6 +109,12 @@ export class WeatherService {
           const currentTime = current?.time;
           const currentDay = currentTime?.split('T')[0];
           const currentHour = currentTime ? `${currentTime.slice(0, 13)}:00` : undefined;
+          const moonPhases = Array.from(forecastByDayMap.keys()).map((date) => ({
+            date,
+            phase: SunCalc.getMoonIllumination(new Date(`${date}T12:00:00Z`)).phase
+          }));
+          const closestNewMoonDate = this.closestMoonPhaseDate(moonPhases, (phase) => Math.min(phase, 1 - phase));
+          const closestFullMoonDate = this.closestMoonPhaseDate(moonPhases, (phase) => Math.abs(phase - 0.5));
 
           const forecastByDay = Array.from(forecastByDayMap.entries()).map(([date, hours]) => {
             const visibleHours =
@@ -120,7 +126,11 @@ export class WeatherService {
             const calculationDate = new Date(`${date}T12:00:00Z`);
             const sunTimes = SunCalc.getTimes(calculationDate, location.latitude, location.longitude);
             const moonTimes = SunCalc.getMoonTimes(calculationDate, location.latitude, location.longitude);
-            const moonPhase = this.moonPhaseLabel(SunCalc.getMoonIllumination(calculationDate).phase);
+            const moonPhase = this.moonPhaseLabel(
+              SunCalc.getMoonIllumination(calculationDate).phase,
+              date === closestNewMoonDate,
+              date === closestFullMoonDate
+            );
 
             return {
               date,
@@ -151,14 +161,29 @@ export class WeatherService {
       );
   }
 
-  private moonPhaseLabel(phase: number): 'Luna nueva' | 'Luna llena' | undefined {
+  private closestMoonPhaseDate(
+    moonPhases: Array<{ date: string; phase: number }>,
+    distanceFromPhase: (phase: number) => number
+  ): string | undefined {
+    return moonPhases.reduce<{ date: string; distance: number } | undefined>((closest, current) => {
+      const distance = distanceFromPhase(current.phase);
+
+      return !closest || distance < closest.distance ? { date: current.date, distance } : closest;
+    }, undefined)?.date;
+  }
+
+  private moonPhaseLabel(
+    phase: number,
+    isClosestNewMoon: boolean,
+    isClosestFullMoon: boolean
+  ): 'Luna nueva' | 'Luna llena' | undefined {
     const phaseThreshold = 0.04;
 
-    if (phase <= phaseThreshold || phase >= 1 - phaseThreshold) {
+    if (isClosestNewMoon && (phase <= phaseThreshold || phase >= 1 - phaseThreshold)) {
       return 'Luna nueva';
     }
 
-    if (Math.abs(phase - 0.5) <= phaseThreshold) {
+    if (isClosestFullMoon && Math.abs(phase - 0.5) <= phaseThreshold) {
       return 'Luna llena';
     }
 
